@@ -1,6 +1,5 @@
 {
 "type": "FeatureCollection",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
 "features": [
 { "type": "Feature", "properties": { "GEOID": "04015", "id": "Mohave", "LAT": 35.7046, "LON": -113.758 }, "geometry": { "type": "Point", "coordinates": [ -113.75842263157645, 35.704592365566626 ] } },
 { "type": "Feature", "properties": { "GEOID": "12035", "id": "Flagler", "LAT": 29.4616, "LON": -81.3136 }, "geometry": { "type": "Point", "coordinates": [ -81.312762670124954, 29.461595069581545 ] } },

@@ -1,4 +1,7 @@
-// Set leaflet map
+/**
+ * Created by jakob on 5/16/2017.
+ */
+
 // Set leaflet map
 var map = L.map("map").setView([50, 15], 4);
 // construct the base map.
@@ -14,13 +17,13 @@ var svgLayer = L.svg().addTo(map);
 
 
 // Setup svg element to work with
-var svg = d3.select("#map").select("svg"),
-    linklayer = svg.append("g"),
-    nodelayer = svg.append("g");
+var svg = d3.select("#map").select("svg");
+var linklayer = svg.append("g");
+var nodelayer = svg.append("g");
 
 
-linklayer.attr("class", "leaflet-zoom-hide");
-nodelayer.attr("class", "leaflet-zoom-hide");
+//linklayer.attr("class", "leaflet-zoom-hide");
+//nodelayer.attr("class", "leaflet-zoom-hide");
 
 // Load data asynchronosuly
 d3.json("assets/nodes.geojson", function(nodes) {

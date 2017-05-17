@@ -34,7 +34,7 @@ d3.spatialsankey = function() {
   // Get or set data for flow volumes (optional)
   spatialsankey.flows = function(_) {
     if (!arguments.length) return flows;
-    flows = _;    
+    flows = _;
     return spatialsankey;
   };
 
@@ -43,6 +43,7 @@ d3.spatialsankey = function() {
     // Calculate aggregate flow values for nodes
     nodes = nodes.map(function(node) {
       // Get all in and outflows to this node
+        node.id = parseInt(node.properties.GEOID);
       var inflows = links.filter(function(link) { return link.target == node.id; });
       var outflows = links.filter(function(link) { return link.source == node.id; });
 
@@ -73,14 +74,16 @@ d3.spatialsankey = function() {
     // Match nodes to links
     links = links.map(function(link){
 
+      link.source = parseInt(link.source);
+      link.targey = parseInt(link.target);
       // Get target and source features
-      var source_feature = nodes.filter(function(node) { return node.id == link.source; })[0],
-          target_feature = nodes.filter(function(node) { return node.id == link.target; })[0];
+      var source_feature = nodes.filter(function(node) { return parseInt(node.properties.GEOID) == parseInt(link.source); })[0],
+          target_feature = nodes.filter(function(node) { return parseInt(node.properties.GEOID) == parseInt(link.target); })[0];
 
       // If nodes were not found, return null
       if (!(source_feature && target_feature)) return null;
-      
-      // Set coordinates for source and target      
+
+      // Set coordinates for source and target
       link.source_coords = source_feature.geometry.coordinates;
       link.target_coords = target_feature.geometry.coordinates;
 
@@ -89,10 +92,10 @@ d3.spatialsankey = function() {
       if (flow) {
         link.flow = flow.flow;
       }
-      
+
       // Make sure flow is a number
       link.flow = parseFloat(link.flow);
-    
+
       return link;
     });
 
@@ -102,7 +105,7 @@ d3.spatialsankey = function() {
     if(link_count != links.length){
       console.log('Dropped ' + (link_count - links.length) + ' links that could not be matched to a node.');
     }
-    
+
     // Calculate ranges for dynamic drawing
     spatialsankey.ranges();
 
@@ -111,7 +114,7 @@ d3.spatialsankey = function() {
 
   // Draw link element
   spatialsankey.link = function(options) {
-    
+
     // Link styles
     // x and y shifts for control points
     var sx = 0.4,
@@ -173,7 +176,7 @@ d3.spatialsankey = function() {
               range = link_flow_range.max - link_flow_range.min;
           return (width_range.max - width_range.min)*(diff/range) + width_range.min;
         };
-    
+
     // Get or set link width function
     link.width = function(_) {
       if (!arguments.length) return width;
@@ -222,7 +225,9 @@ d3.spatialsankey = function() {
       if (d.properties.aggregate_outflows == 0) return 0;
       var diff = d.properties.aggregate_outflows - node_flow_range.min,
           range = node_flow_range.max - node_flow_range.min;
-      return (node_radius_range.max - node_radius_range.min)*(diff/range) + node_radius_range.min;
+      var radius = (node_radius_range.max - node_radius_range.min)*(diff/range) + node_radius_range.min;
+      // return Math.sqrt(radius);
+        return radius / 3.0;
     };
     node.color = function(_) {
       if (!arguments.length) return color;
