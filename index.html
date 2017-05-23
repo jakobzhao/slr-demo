@@ -3,16 +3,148 @@
 <head>
     <meta charset="utf-8">
     <title>GeoVisualization Project</title>
+
+    <!--add required stylesheets-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
     <link rel="stylesheet" href="css/main.css" />
+
+    <!--add font families-->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+    <!--add a favicon-->
+    <link rel="favicon" href="img/logo.ico" type="image/ico" />
+
+    <!-- add icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!--add required libraries-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
 </head>
 <body>
+
+<div class="navbar navbar-inverse navbar-fixed-top navbar-toggleable-md" role="navigation">
+    <div class="container">
+        <!--<div class="container-fluid">-->
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <!--<a class="navbar-brand" href="#">GeoVisualization</a>-->
+            <a class="navbar-brand" href="#" title="GeoVisualization Example">
+                <img src="img/logo-long.png" style="width:80%; margin-top:-10px" class="d-inline-block align-top">
+            </a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="immigrants.html">Immigrant Flow</a>
+                </li>
+                <li>
+                    <a href="slr.html" target="_blank">Sea Level Rise</a>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Share To... <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#"> <i class="fa fa-facebook-square" aria-hidden="true"></i> Facebook</a></li>
+                        <li><a href="#"> <i class="fa fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+                        <li><a href="https://alturl.com/kni7r"> <i class="fa fa-link" aria-hidden="true"></i> ShortUrl</a></li>
+                    </ul>
+
+                <li>
+                    <a href="about.html"> <i class="fa fa-github fa-lg" aria-hidden="true"></i>&nbsp;&nbsp;<span>Source Codes</span></a>
+                </li>
+
+                <li>
+                    <a href="about.html" target="_blank">About</a>
+                </li>
+
+                <li>
+                    <a data-toggle="modal" data-target="#info-modal">About Popup</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!--map container-->
 <div id="map"></div>
+
+<!--the Info Panel-->
+<div class="infopanel">
+    <h4> Map Title </h4>
+    <p><b> Subtitle of the map </b></p><br/>
+    <i style="background: #bd0026"></i> <p> 1200+ </p>
+    <i style="background: #f03b20"></i> <p> 651 to 1200 </p>
+    <i style="background: #fd8d3c"></i> <p> 401 to 650 </p>
+    <i style="background: #fecc5c"></i> <p> 261 to 400 </p>
+    <i style="background: #ffffb2"></i> <p> 150 to 260 </p>
+    <i><svg width="16" height="16" data-reactid=".0.1.1.0.0.1:$=11:$1.0.0.$masked.0">
+        <pattern id="diagonalHatch" patternUnits="userSpaceOnUse" width="4" height="4">
+            <path d="M-1,1 l2,-2
+           M0,4 l4,-4
+           M3,5 l2,-2" style="stroke:black; stroke-width:0.5" />
+        </pattern>
+        <rect x="0" y="0" width="100%" height="100%" fill="url(#diagonalHatch)"/>
+
+    </svg></i> <p> No data </p>
+
+    <!--svg editor http://jxnblk.com/paths/-->
+    <i><svg width="16" height="16">
+        <path d='M0 16 L16 16 L16 0 L8 10 L0 0 Z' style="stroke:blue; stroke-width:2;fill:red"></path>
+    </svg></i> <p> a polygon feature </p>
+
+
+    <!--svg editor http://jxnblk.com/paths/-->
+    <i><svg width="16" height="16">
+        <path d='M0 16 L16 16 L16 0 L8 10 L0 0 Z' style="stroke:blue; stroke-width:2;"></path>
+    </svg></i> <p> a polyline feature </p>
+
+
+    <i class="glyphicon glyphicon-flag" style="color:red"> </i> <p> a marker </p>
+
+
+
+    <br/>
+    <p> bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla <a href="https://data.cityofnewyork.us/Social-Services/Noise-complaints-since-20151101-w-Unspecified-CB/vjav-8yz5">bla bla bla bla bla bla </a>. bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla .</p><br/>
+    <p> Web Map Lib: Leaflet | BaseMap: CartoDB | Data Source: bla bla bla  </p>
+    <p> Author: <a href="http://ceoas.oregonstate.edu/profile/zhao/" target="_blank">Bo Zhao </a> | CEOAS | Oregon State University</p>
+    <p> A Project supported by <a href="http://geoviz.ceoas.oregonstate.edu" target="_blank"> <img src="img/logo.png" style="height:16px;margin-top:-4px"> -- The Cartography and Geovisualization Group</a> at Oregon State University</p>
+
+</div>
+
+
+<!--the info page-->
+<div class="modal fade" id="info-modal" role="dialog">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">About</h4>
+            </div>
+            <div class="modal-body">
+                <p> bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla .</p>
+                <p><b>storymap.js</b> | Released Date: 02/20/2017 | Version: 2.1 | MIT License </p>
+                <p><b>Author: Bo Zhao</b> | College of Earth, Ocean, Atmospheric Science | Oregon State University </p>
+                <p>The context about Oregon cities was collected from Wikipedia.</p>
+                <p>This story map uses geospatial data from cartoDB, Google Earth Engine, Microsoft Bing map, Open Street Maps and Oregon Explorer.</p>
+            </div>
+        </div>
+    </div>
+</div>
 <script type="text/javascript">
 
     // construct a leaflet map object.
-    var map = L.map("map").setView([40,-100], 5);
+    // var map = L.map("map").setView([40,-100], 5);
+    // var map = L.map("map", {zoomControl: false}).setView([40,-100], 5); // deactivate the zoomControl
+
+    var maxBounds = [
+        [22, -130], //Southwest
+        [60, -60]  //Northeast
+    ];
+    var map = L.map("map", {zoomControl: false}).fitBounds(maxBounds);
 
     // construct the base map.
     L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png').addTo(map);
@@ -25,7 +157,6 @@
 
     //add a sea level rise layer. The sea level rises 2 feet. the data is retrieved from https://coast.noaa.gov/slr/ 0 to 6ft
     L.tileLayer('http://maps2.coast.noaa.gov/arcgis/rest/services/dc_slr/slr_2ft/MapServer/tile/{z}/{y}/{x}').addTo(map);
-
 
 </script>
 </body>

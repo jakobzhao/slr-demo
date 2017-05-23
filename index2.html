@@ -61,33 +61,90 @@
                     <a href="about.html" target="_blank">About</a>
                 </li>
 
-
+                <li>
+                    <a data-toggle="modal" data-target="#info-modal">About Popup</a>
+                </li>
             </ul>
         </div>
-        <!-- /.navbar-collapse -->
     </div>
-    <!-- /.container -->
 </div>
 
+<!--map container-->
 <div id="map"></div>
-<div class="legend">
-    <h4> Noise Complaints in New York City </h4>
-    <p><b> # of Noise Complaints (Jan. to Mar. 2017) </b></p><br/>
+
+<!--the Info Panel-->
+<div class="infopanel">
+    <h4> Map Title </h4>
+    <p><b> Subtitle of the map </b></p><br/>
     <i style="background: #bd0026"></i> <p> 1200+ </p>
     <i style="background: #f03b20"></i> <p> 651 to 1200 </p>
     <i style="background: #fd8d3c"></i> <p> 401 to 650 </p>
     <i style="background: #fecc5c"></i> <p> 261 to 400 </p>
-    <i style="background: #ffffb2"></i> <p> 150 to 260 </p><br/>
-    <p> This 3D thematic map shows the number of noise complaints in New York City according to all the 3-1-1 Service requests from January to March, 2017. The data was directly downloaded from <a href="https://data.cityofnewyork.us/Social-Services/Noise-complaints-since-20151101-w-Unspecified-CB/vjav-8yz5">NYC OpenData</a>. In the United States, 3-1-1 is a special telephone number that provides access to non-emergency municipal services.</p><br/>
-    <p> Web Map Lib: Leaflet | BaseMap: Mapbox | Noise Reports: NYC OpenData </p>
+    <i style="background: #ffffb2"></i> <p> 150 to 260 </p>
+    <i><svg width="16" height="16" data-reactid=".0.1.1.0.0.1:$=11:$1.0.0.$masked.0">
+        <pattern id="diagonalHatch" patternUnits="userSpaceOnUse" width="4" height="4">
+            <path d="M-1,1 l2,-2
+           M0,4 l4,-4
+           M3,5 l2,-2" style="stroke:black; stroke-width:0.5" />
+        </pattern>
+        <rect x="0" y="0" width="100%" height="100%" fill="url(#diagonalHatch)"/>
+
+    </svg></i> <p> No data </p>
+
+    <!--svg editor http://jxnblk.com/paths/-->
+    <i><svg width="16" height="16">
+        <path d='M0 16 L16 16 L16 0 L8 10 L0 0 Z' style="stroke:blue; stroke-width:2;fill:red"></path>
+    </svg></i> <p> a polygon feature </p>
+
+
+    <!--svg editor http://jxnblk.com/paths/-->
+    <i><svg width="16" height="16">
+        <path d='M0 16 L16 16 L16 0 L8 10 L0 0 Z' style="stroke:blue; stroke-width:2;"></path>
+    </svg></i> <p> a polyline feature </p>
+
+
+    <i class="glyphicon glyphicon-flag" style="color:red"> </i> <p> a marker </p>
+
+
+
+    <br/>
+    <p> bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla <a href="https://data.cityofnewyork.us/Social-Services/Noise-complaints-since-20151101-w-Unspecified-CB/vjav-8yz5">bla bla bla bla bla bla </a>. bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla .</p><br/>
+    <p> Web Map Lib: Leaflet | BaseMap: CartoDB | Data Source: bla bla bla  </p>
     <p> Author: <a href="http://ceoas.oregonstate.edu/profile/zhao/" target="_blank">Bo Zhao </a> | CEOAS | Oregon State University</p>
+    <p> A Project supported by <a href="http://geoviz.ceoas.oregonstate.edu" target="_blank"> <img src="img/logo.png" style="height:16px;margin-top:-4px"> -- The Cartography and Geovisualization Group</a> at Oregon State University</p>
+
+</div>
+
+
+<!--the info page-->
+<div class="modal fade" id="info-modal" role="dialog">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">About</h4>
+            </div>
+            <div class="modal-body">
+                <p> bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla .</p>
+                <p><b>storymap.js</b> | Released Date: 02/20/2017 | Version: 2.1 | MIT License </p>
+                <p><b>Author: Bo Zhao</b> | College of Earth, Ocean, Atmospheric Science | Oregon State University </p>
+                <p>The context about Oregon cities was collected from Wikipedia.</p>
+                <p>This story map uses geospatial data from cartoDB, Google Earth Engine, Microsoft Bing map, Open Street Maps and Oregon Explorer.</p>
+            </div>
+        </div>
+    </div>
 </div>
 <script type="text/javascript">
 
     // construct a leaflet map object.
-    // var map = L.map("map").setView([40,-100], 5); // deactivate the zoomControl
+    // var map = L.map("map").setView([40,-100], 5);
+    // var map = L.map("map", {zoomControl: false}).setView([40,-100], 5); // deactivate the zoomControl
 
-    var map = L.map("map", {zoomControl: false}).setView([40,-100], 5);
+    var maxBounds = [
+        [22, -130], //Southwest
+        [60, -60]  //Northeast
+    ];
+    var map = L.map("map", {zoomControl: false}).fitBounds(maxBounds);
 
     // construct the base map.
     L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png').addTo(map);
