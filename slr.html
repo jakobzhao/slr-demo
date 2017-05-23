@@ -8,9 +8,6 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
     <link rel="stylesheet" href="css/main.css" />
     <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
-
-
-
     <script src="https://ivansanchez.gitlab.io/Leaflet.TileLayer.GL/src/Leaflet.TileLayer.GL.js"></script>
 </head>
 <body>
@@ -48,7 +45,7 @@
 `
 
     // Set leaflet map
-    var map = L.map("map").setView([50,-100], 4);
+    var map = L.map("map").setView([50,-100], 5);
     // construct the base map.
     L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png').addTo(map);
 
