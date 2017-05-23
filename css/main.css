@@ -11,6 +11,7 @@ body {
     right:0px;
     height: 100%;
 }
+
 path {
     fill: none;
     stroke: #4682B4;
@@ -27,14 +28,8 @@ path:hover {
     right: 10px;
     top:6px;
 }
-.box {
-    border: 1px solid #EEE;
-    margin: 3px;
-    padding: 5px;
-    background-color: white;
-    font-family: sans-serif;
-    font-size: 12px;
-}
+
+
 .title {
     font-weight: 600;
 }
@@ -44,3 +39,39 @@ path:hover {
     top: 6px;
     left: 50px;
 }
+
+
+
+.legend {
+    line-height: 16px;
+    width: 280px;
+    position: absolute;
+    z-index: 1000;
+    left: 10px;
+    bottom: 10px;
+    color: #070707;
+    padding: 6px 8px;
+    background: rgba(243, 243, 243, 0.73);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+}
+
+
+.legend i {
+    width: 16px;
+    height: 16px;
+    float: left;
+    margin-right: 8px;
+    opacity: 0.7;
+}
+
+.legend p {
+    font-size: 12px;
+    line-height: 16px;
+    margin: 0;
+}
+
+a:visited {color:#a0a0a0; background-color:transparent; text-decoration:none}
+a:hover   {color:#a0a0a0; background-color:transparent; text-decoration:none}
+a:active {color:#a0a0a0; background-color:transparent; text-decoration:none}
+a:link   {color:#a0a0a0; background-color:transparent; text-decoration:none}
