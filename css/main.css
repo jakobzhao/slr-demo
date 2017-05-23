@@ -27,7 +27,7 @@ path:hover {
 }
 
 
-.infopanel {
+.info-panel {
     line-height: 16px;
     width: 280px;
     position: absolute;
@@ -42,7 +42,7 @@ path:hover {
 }
 
 
-.infopanel i {
+.info-panel i {
     width: 16px;
     height: 16px;
     line-height: 16px;
@@ -51,7 +51,7 @@ path:hover {
     opacity: 0.7;
 }
 
-.infopanel p {
+.info-panel p {
     font-size: 12px;
     line-height: 16px;
     margin: 0;
