@@ -2,58 +2,74 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>SLR and Immigration</title>
+    <title>SLR Example</title>
+
+    <!--add required stylesheets-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
     <link rel="stylesheet" href="css/main.css" />
-    <script src="http://d3js.org/d3.v3.min.js"></script>
+
+    <!--add font families-->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+    <!--add a favicon-->
+    <link rel="favicon" href="img/logo.ico" type="image/ico" />
+
+    <!-- add icons -->
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!--add required libraries-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
-    <script src="https://rawgithub.com/mylen/leaflet.TileLayer.WMTS/master/leaflet-tilelayer-wmts.js"></script>
-    <script src="js/spatialsankey.js"></script>
 </head>
 <body>
+
+<div class="navbar navbar-inverse navbar-fixed-top navbar-toggleable-md" role="navigation">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+
+            <a class="navbar-brand" href="#">Hello, World!</a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="immigrants.html">Immigrant Flow</a>
+                </li>
+                <li>
+                    <a href="slr.html">Scene 2</a>
+                </li>
+                <li>
+                    <a href="about.htmls">Scene 3</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</div>
+
 <div id="map"></div>
 <script type="text/javascript">
 
-    // Set leaflet map
-    var map = L.map("map").setView([50,-100], 4);
+    // construct a leaflet map object.
+    // var map = L.map("map").setView([40,-100], 5); // deactivate the zoomControl
+
+    var map = L.map("map", {zoomControl: false}).setView([40,-100], 5);
 
     // construct the base map.
     L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png').addTo(map);
 
+    // add a population density layer
+    var wms = L.tileLayer.wms(
+        "http://sedac.ciesin.columbia.edu/geoserver/wms",
+        {layers: 'gpw-v3:gpw-v3-population-density_2000', opacity: 0.5}
+    ).addTo(map);
 
-//    //https://coast.noaa.gov/slr/   0 to 6ft
-//    L.tileLayer('http://maps2.coast.noaa.gov/arcgis/rest/services/dc_slr/slr_2ft/MapServer/tile/{z}/{y}/{x}').addTo(map);
-//
-//
-//
-//
-//    var wms = L.tileLayer.wms(
-//        "http://sedac.ciesin.columbia.edu/geoserver/wms",
-//        {layers: 'gpw-v3:gpw-v3-population-density_2000', opacity: 0.5}
-//    ).addTo(map);
-
-
-    //http://ts2.scalgo.com/olpatch/wmts?token=CC5BF28A7D96B320C7DFBFD1236B5BEB&layer=SRTM_4_1%3ASRTM_4_1_flooded_sealevels&style=default&tilematrixset=EPSG%3A3857&Service=WMTS&Request=GetTile&Version=1.0.0&Format=image%2Fpng&TileMatrix=7&TileCol=30&TileRow=53&threshold=100
-    // threshold unit meters
-    // Demonstrates smooth reloading of layers when changing a dimension continously. The demonstration layer is a global sea-level computation (flooding computation from SCALGO, underlying data from CGIAR-CSI SRTM) where cells that are flooded if the sea-level rises to more than x m are colored blue. The user selects the sea-level dimension using a slider.
-    var scalgoToken = 'CC5BF28A7D96B320C7DFBFD1236B5BEB';
-    var url =  'http://ts2.scalgo.com/olpatch/wmts?token=' + scalgoToken;
-    var ign = new L.TileLayer.WMTS( url,
-        {
-            layer: 'SRTM_4_1:SRTM_4_1_flooded_sealevels',
-            style: "default",
-            format: 'image/png',
-            matrixSet: 'EPSG:3857',
-            threshold: 40,
-            dimensions: {
-                'threshold': 100
-            },
-
-            attribution: "<a href='https://github.com/mylen/leaflet.TileLayer.WMTS'>GitHub</a>&copy; <a href='http://www.ign.fr'>IGN</a>"
-        }, {opacity: 0.5}
-    );
-    ign.addTo(map);
-
+    //add a sea level rise layer. The sea level rises 2 feet. the data is retrieved from https://coast.noaa.gov/slr/ 0 to 6ft
+    L.tileLayer('http://maps2.coast.noaa.gov/arcgis/rest/services/dc_slr/slr_2ft/MapServer/tile/{z}/{y}/{x}').addTo(map);
 
 </script>
 </body>

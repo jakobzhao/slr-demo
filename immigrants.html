@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>SLR and Immigration</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+    <link rel="stylesheet" href="css/main.css" />
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <!--<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>-->
+    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+    <script src="js/spatialsankey.js"></script>
+</head>
+<body>
+    <div id="map"></div>
+    <script type="text/javascript">
+
+    // Set leaflet map
+    var map = L.map("map").setView([50,-100], 4);
+    // construct the base map.
+    L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png').addTo(map);
+
+    // Initialize the SVG layer
+    var svgLayer = L.svg().addTo(map);
+
+    // Setup svg element to work with
+    var svg = d3.select("#map").select("svg")
+        .attr("pointer-events", "auto");
+
+    var linklayer = svg.append("g").attr("class", "leaflet-zoom-hide");
+    var nodelayer = svg.append("g").attr("class", "leaflet-zoom-hide");
+
+
+    // Load data asynchronosuly
+    d3.json("assets/county_pts.geojson", function(nodes) {
+        d3.csv("assets/us_links_part.csv", function(links) {
+
+            // Setup spatialsankey object
+            var spatialsankey = d3.spatialsankey()
+                .lmap(map)
+                .nodes(nodes.features)
+                .links(links);
+            console.log("pause");
+            function mouseover(d){
+                // Get link data for this node
+                var nodelinks = spatialsankey.links().filter(function(link){
+                    return link.source == d.id;
+                });
+
+                // Add data to link layer
+                var beziers = linklayer.selectAll("path").data(nodelinks);
+                link = spatialsankey.link({'use_arcs': false, 'flip': false});
+
+                // Draw new links
+                beziers.enter()
+                    .append("path")
+                    .attr("d", link)
+                    .attr('id', function(d){return d.id})
+                    .style("stroke-width", spatialsankey.link().width());
+
+                // Remove old links
+                beziers.exit().remove();
+
+                // Hide inactive nodes
+                var circleUnderMouse = this;
+                circs.transition().style('opacity',function () {
+                    return (this === circleUnderMouse) ? 0.7 : 0;
+                });
+            };
+
+
+            function mouseout (d) {
+                // Remove links
+                linklayer.selectAll("path").remove();
+                // Show all nodes
+                circs.transition().style('opacity', 0.7);
+            };
+
+            // Draw nodes
+            var node = spatialsankey.node();
+            var circs = nodelayer.selectAll("circle")
+                .data(spatialsankey.nodes())
+                .enter()
+                .append("circle")
+                .attr("cx", node.cx)
+                .attr("cy", node.cy)
+                .attr("r", node.r)
+                .style("fill", node.fill)
+                .attr("opacity", 0.7)
+                    .on("mouseover", mouseover)
+                    .on("mouseout", mouseout);
+
+
+            // Adopt size of drawn objects after leaflet zoom reset
+            var zoomend = function(){
+                linklayer.selectAll("path").attr("d", spatialsankey.link());
+
+                circs.attr("cx", node.cx)
+                    .attr("cy", node.cy);
+            };
+
+            map.on("zoomend", zoomend);
+        });
+    });
+
+    </script>
+</body>
+</html>
