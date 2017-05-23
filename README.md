@@ -1,4 +1,6 @@
-# slr
+# Geovisualization Project Example
+
+![](img/mainpage.png)
 
 ![](img/thematic.png)
 

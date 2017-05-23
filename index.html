@@ -3,7 +3,6 @@
 <head>
     <meta charset="utf-8">
     <title>GeoVisualization Project</title>
-
     <!--add required stylesheets-->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
@@ -124,7 +123,6 @@
 
 </div>
 
-
 <!--the info page-->
 <div class="modal fade" id="about-window" role="dialog">
     <div class="modal-dialog modal-md">
@@ -147,20 +145,16 @@
 
     // construct a leaflet map object.
     // var map = L.map("map").setView([40,-100], 5);
-    // var map = L.map("map", {zoomControl: false}).setView([40,-100], 5); // deactivate the zoomControl
+    var map = L.map("map", {zoomControl: false}).setView([40,-100], 5); // deactivate the zoomControl
 
-    var maxBounds = [
-        [25, -128], //Southwest
-        [49, -60]  //Northeast
-    ];
-    var map = L.map("map", {zoomControl: false}).fitBounds(maxBounds);
+    // add a scale bar.
     L.control.scale({position: 'bottomright', metric: false}).addTo(map);
 
-    // construct the base map.
+    // construct a base map in light color.
     L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png').addTo(map);
 
     // add a population density layer
-    var wms = L.tileLayer.wms(
+    L.tileLayer.wms(
         "http://sedac.ciesin.columbia.edu/geoserver/wms",
         {layers: 'gpw-v3:gpw-v3-population-density_2000', opacity: 0.5}
     ).addTo(map);
