@@ -29,10 +29,19 @@
 </head>
 <body>
 
-
-
-<input id="ex1" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14"/>
 <div id="map"></div>
+
+<div class="info-panel">
+    <h4> Map Title </h4>
+    <p><b> Subtitle of the map </b></p><br/>
+
+    <input id="ex1" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="1" data-slider-step="1" data-slider-value="1"/>
+
+    <!--place holder-->
+    <br/>
+    <p> A Project supported by <a href="http://geoviz.ceoas.oregonstate.edu" target="_blank"> <img src="img/logo.png" style="height:16px;margin-top:-4px"> The Cartography and Geovisualization Group</a> at Oregon State University</p>
+
+</div>
 
 <script type="text/javascript">
 
@@ -60,7 +69,7 @@
                 gl_FragColor = vec4(0.05, 0.2, 0.9, 0.4);
             }
         }
-`
+    `
 
     var fragmentShader2 = `
         void main(void) {
@@ -86,7 +95,7 @@
                 gl_FragColor = vec4(0.05, 0.1, 0.9, 0.4);
             }
         }
-`
+    `
 
 
     // Set leaflet map
@@ -109,25 +118,25 @@
 
     $('#ex1').slider({
         formatter: function(value) {
-
             return 'Current value: ' + value;
         }
     });
 
     var currentLayerGroup = L.layerGroup().addTo(map);
+    currentLayerGroup.addLayer(antitoner2);
 
-    $('#ex1').on("slideStop", function(value) {
+    $('#ex1').on("slideStop", function(e) {
 
         currentLayerGroup.clearLayers();
 
-        if (value > 16) {
-
-            currentLayerGroup.addLayer(antitoner2);
+        if (e.value == 0) {
+          //  alert("larger");
+            currentLayerGroup.addLayer(antitoner);
         } else {
+           // alert("smaller");
             currentLayerGroup.addLayer(antitoner2);
         }
 
-        antitoner.refresh();
 
     });
 
