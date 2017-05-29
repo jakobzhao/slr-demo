@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <title>Leaflet TileLayer.GL See Level Rise</title>
+
+    <!--add required stylesheets-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+    <link rel="stylesheet" href="css/slider.css" />
+    <link rel="stylesheet" href="css/main.css" />
+
+    <!--add font families-->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+    <!--add a favicon-->
+    <link rel="favicon" href="img/logo.ico" type="image/ico" />
+
+    <!-- add icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!--add required libraries-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="js/bootstrap-slider.js"></script>
+    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+    <script src="https://ivansanchez.gitlab.io/Leaflet.TileLayer.GL/src/Leaflet.TileLayer.GL.js"></script>
+</head>
+<body>
+
+
+
+<input id="ex1" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14"/>
+<div id="map"></div>
+
+<script type="text/javascript">
+
+    var fragmentShader = `
+        void main(void) {
+            highp vec4 texelColour = texture2D(uTexture0, vec2(vTextureCoords.s, vTextureCoords.t));
+            // Height is represented in TENTHS of a meter
+            highp float height = (
+                texelColour.r * 255.0 * 256.0 * 256.0 +
+                texelColour.g * 255.0 * 256.0 +
+                texelColour.b * 255.0 )
+            -100000.0;
+
+            if (height > 100.0) {
+                // High (>30m) over ground, transparent
+                gl_FragColor = vec4(0.5, 0.9, 0.5, 0.0);
+            } else if (height > 50.0) {
+                // Over ground but somewhat close to sea level, yellow
+                gl_FragColor = vec4(0.9, 0.1, 0.5, 0.4);
+            } else if (height > 0.0) {
+                // Over ground but very close to sea level, red
+                gl_FragColor = vec4(0.9, 0.9, 0.5, 0.4);
+            } else {
+                // Water, some semiopaque blue
+                gl_FragColor = vec4(0.05, 0.2, 0.9, 0.4);
+            }
+        }
+`
+
+    var fragmentShader2 = `
+        void main(void) {
+            highp vec4 texelColour = texture2D(uTexture0, vec2(vTextureCoords.s, vTextureCoords.t));
+            // Height is represented in TENTHS of a meter
+            highp float height = (
+                texelColour.r * 255.0 * 256.0 * 256.0 +
+                texelColour.g * 255.0 * 256.0 +
+                texelColour.b * 255.0 )
+            -100000.0;
+
+            if (height > 200.0) {
+                // High (>30m) over ground, transparent
+                gl_FragColor = vec4(0.5, 0.5, 0.5, 0.0);
+            } else if (height > 2.0) {
+                // Over ground but somewhat close to sea level, yellow
+                gl_FragColor = vec4(0.9, 0.9, 0.5, 0.4);
+            } else if (height > 0.0) {
+                // Over ground but very close to sea level, red
+                gl_FragColor = vec4(0.9, 0.5, 0.5, 0.4);
+            } else {
+                // Water, some semiopaque blue
+                gl_FragColor = vec4(0.05, 0.1, 0.9, 0.4);
+            }
+        }
+`
+
+
+    // Set leaflet map
+    var map = L.map("map").setView([40,-100], 5);
+    // construct the base map.
+    L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png').addTo(map);
+
+    var mapboxAccessToken = 'pk.eyJ1IjoibWF0dCIsImEiOiJTUHZkajU0In0.oB-OGTMFtpkga8vC48HjIg';
+
+    var antitoner = L.tileLayer.gl({
+        fragmentShader: fragmentShader,
+        tileUrls: ['https://{s}.tiles.mapbox.com/v4/mapbox.terrain-rgb/{z}/{x}/{y}.pngraw?access_token=' + mapboxAccessToken]
+    });
+
+
+    var antitoner2 = L.tileLayer.gl({
+        fragmentShader: fragmentShader2,
+        tileUrls: ['https://{s}.tiles.mapbox.com/v4/mapbox.terrain-rgb/{z}/{x}/{y}.pngraw?access_token=' + mapboxAccessToken]
+    });
+
+    $('#ex1').slider({
+        formatter: function(value) {
+
+            return 'Current value: ' + value;
+        }
+    });
+
+    var currentLayerGroup = L.layerGroup().addTo(map);
+
+    $('#ex1').on("slideStop", function(value) {
+
+        currentLayerGroup.clearLayers();
+
+        if (value > 16) {
+
+            currentLayerGroup.addLayer(antitoner2);
+        } else {
+            currentLayerGroup.addLayer(antitoner2);
+        }
+
+        antitoner.refresh();
+
+    });
+
+
+</script>
+</body>
+</html>

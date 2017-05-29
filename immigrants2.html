@@ -33,7 +33,7 @@
 	var map = L.map("map").setView([40,-100], 5);
 
 	// construct the base map.
-	L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png').addTo(map);
+	L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}@2x.png').addTo(map);
 
 	// Initialize the SVG layer
 	var svgLayer = L.svg().addTo(map);
@@ -43,9 +43,9 @@
 	var svg = d3.select("#map").select("svg");
 
 
-
+    var nodelayer = svg.append("g").attr("class", "leaflet-zoom-hide");
 	var linklayer = svg.append("g").attr("class", "leaflet-zoom-hide");
-	var nodelayer = svg.append("g").attr("class", "leaflet-zoom-hide");
+
 
 
 	// Load data asynchronosuly
@@ -99,7 +99,7 @@
 				// Hide inactive nodes
 				var circleUnderMouse = this;
 				hexs.transition().style('opacity',function () {
-					return (this === circleUnderMouse) ? 0.3 : 0;
+					return (this === circleUnderMouse) ? 0.7 : 0;
 				});
 
 			}
@@ -112,7 +112,7 @@
 					// Remove links
 					linklayer.selectAll("path").remove();
 					// Show all nodes
-					hexs.transition().style('opacity', 0.3);
+					hexs.transition().style('opacity', 0.7);
 				}
 			}
 
@@ -123,7 +123,7 @@
 
 					linklayer.selectAll("path").remove();
 					// Show all nodes
-					hexs.transition().style('opacity', 0.3);
+					hexs.transition().style('opacity', 0.7);
 
 
 				} else {
@@ -142,7 +142,7 @@
 				.attr("d", node.geopath)
 				.style("fill", node.fill)
 				.style("display", node.display)
-				.attr("opacity", 0.3)
+				.attr("opacity", 0.7)
 				.on("mouseover", mouseover)
 				.on("mouseout", mouseout)
 				.on("click", click);
