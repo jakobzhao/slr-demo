@@ -14,26 +14,33 @@ body {
     right:0px;
 }
 
+
+
 path {
-    fill: none;
-    stroke: #4682B4;
-    stroke-opacity: 0.6;
-    stroke-linecap: round;
+    pointer-events: visible !important;
     cursor: pointer;
 }
+
+path.curve {
+    stroke: #00a5ff;
+    stroke-opacity: 0.4;
+    stroke-linecap: round;
+    pointer-events: visible !important;
+}
+
 path:hover {
     stroke-opacity: 0.8;
-    stroke: #315B7E;
+    stroke: #007bbf;
 }
 
 
 .info-panel {
     line-height: 16px;
     width: 280px;
-    position: absolute;
+    position: fixed;
     z-index: 1000;
     left: 10px;
-    bottom: 10px;
+    bottom: 20px;
     color: #070707;
     padding: 6px 8px;
     background: rgba(243, 243, 243, 0.73);
