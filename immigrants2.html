@@ -56,9 +56,12 @@
 				.nodes(nodes.features)
 				.links(links);
 			var hex_opened = false;
+			var hex_clicked = false;
 
 			var mouseover = function(d) {
 				if (hex_opened) return 0;
+
+
 				// Get link data for this node
 				var nodelinks = spatialsankey.links().filter(function(link){
 						return link.source == d.id;
@@ -109,12 +112,18 @@
 					linklayer.selectAll("path").remove();
 					// Show all nodes
 					hexs.transition().style('opacity', 0.7);
+                    hex_opened = false;
+				} else {
+
 				}
-                hex_opened = false;
+
 			}
 
 			var click = function(d) {
+
                 hex_opened = true;
+                hex_clicked = true
+
 			}
 
 
@@ -139,12 +148,20 @@
 			};
 
 			var mapclick = function(e) {
-                if (!hex_opened) {
-                    hex_opened = false;
-                    linklayer.selectAll("path").remove();
-                    // Show all nodes
-                    hexs.transition().style('opacity', 0.7);
-                }
+
+					if (hex_clicked){
+                        hex_clicked = false;
+					}else {
+                        linklayer.selectAll("path").remove();
+                        // Show all nodes
+                        hexs.transition().style('opacity', 0.7);
+                        hex_opened = false;
+
+                    }
+
+
+
+
 
 			}
 
