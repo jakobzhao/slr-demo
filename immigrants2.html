@@ -72,14 +72,19 @@
 			var hex_opened = false;
 			var hex_clicked = false;
 
+
+
+
 			var mouseover = function(d) {
 				if (hex_opened) return 0;
 
 
-				// Get link data for this node
-				var nodelinks = spatialsankey.links().filter(function(link){
-						return link.source == d.id;
-				});
+					// Get link data for this node
+					var nodelinks = spatialsankey.links().filter(function(link){
+							return link.source == d.id;
+					});
+
+
 
 				// Add data to link layer
 				var beziers = linklayer.selectAll("path").data(nodelinks);
@@ -112,8 +117,6 @@
 				beziers.exit().remove();
 
 
-
-
                 $.each(beziers[0], function (key, bezier) {
 
                         start_pnt_string = $(bezier).attr("d").replace("M", "").replace("C", " ").split(" ")[0];
@@ -124,25 +127,14 @@
 //                            .attr("transform", "translate(" + start_pnt + ")");
 
 
-                    var circle = svg.append("g")
-						.attr('marker-start', 'url(#arrow)')
+
+                    var circle = svg.append("svg:image")
                         .attr('x',0)
                         .attr('y',0)
-                        .attr('width', 100)
-                        .attr('height', 100);
-//                      .attr("transform", "translate(" + start_pnt + ")");
-
-
-
-//                    var circle = svg.append("svg:image")
-//                        .attr('x',0)
-//                        .attr('y',0)
-//                        .attr('width', 10)
-//                        .attr('height', 10)
-//                        .attr("orient", "auto")
-//                        .attr("xlink:href","https://www.greensock.com/_img/codepen/bezierCreature/creature_red.png")
-//
-//
+                        .attr('width', 10)
+                        .attr('height', 10)
+                        .attr("orient", "auto")
+                        .attr("xlink:href","https://www.greensock.com/_img/codepen/bezierCreature/creature_red.png")
 
 
 
@@ -161,7 +153,7 @@
 
                         function transition() {
                             circle.transition()
-                                .duration((Math.random() * 5000) )
+                                .duration((Math.random() * 10000) )
                                 .attrTween("transform", translateAlong(bezier))
                                 .each("end", transition);
                         }
@@ -201,13 +193,19 @@
 
 
 
-				// Hide inactive nodes
-				var circleUnderMouse = this;
-				hexs.transition().style('opacity',function () {
-					return (this === circleUnderMouse) ? 0.7 : 0;
-				});
+//				// Hide inactive nodes
+//				var circleUnderMouse = this;
+//				hexs.transition().style('opacity',function () {
+//					return (this === circleUnderMouse) ? 0.7 : 0;
+//				});
 
 			}
+
+
+//            mouseover({
+//				"id": -1,
+//				"flow": 1
+//			});
 
 			var mouseout = function(d) {
 
