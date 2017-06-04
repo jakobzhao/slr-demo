@@ -34,6 +34,29 @@ path:hover {
 
 }
 
+.path-arrow {
+
+    fill-opacity: 0.4;
+    fill: #00a5ff;
+}
+
+.moving-object {
+    stroke: #007bbf;
+
+    fill:  #007bbf;
+    stroke-opacity: 0.5;
+    fill-opacity:0.5;
+    text-shadow: 0 0 1px rgba(255, 255, 255, 0.58);
+}
+
+. m2 {
+
+    background:url(https://www.greensock.com/_img/codepen/bezierCreature/creature_red.png);
+    width: 20px;
+    height: 20px;
+
+}
+
 
 .info-panel {
     line-height: 16px;
