@@ -15,7 +15,7 @@
 	<script src="js/spatialsankey-custom.js"></script>
 </head>
 <body>
-	<div id="map"></div>
+<div id="map"></div>
 <div class="info-panel">
 	<h4> Map Title </h4>
 	<p><b> Subtitle of the map </b></p><br/>
@@ -44,21 +44,25 @@
 
 
 	// make arrows.
-    svg.append("svg:defs")
-        .append("svg:marker")
-        .attr("id", "arrow")
+	svg.append("svg:defs")
+		.append("svg:marker")
+		.attr("id", "arrow")
 		.attr("class", "path-arrow")
-        .attr("refX", 0)
-        .attr("refY", 1)
-        .attr("markerWidth", 4)
-        .attr("markerHeight", 4)
-        .attr("orient", "auto")
-        .append("svg:path")
-        .attr("d", "M0,0 L0,2 L3,1 z");
+		.attr("refX", 0)
+		.attr("refY", 1)
+		.attr("markerWidth", 4)
+		.attr("markerHeight", 4)
+		.attr("orient", "auto")
+		.append("svg:path")
+		.attr("d", "M0,0 L0,2 L3,1 z");
 
 
-    var linklayer = svg.append("g").attr("class", "leaflet-zoom-hide").attr("marker-end", "url(#arrow)");
-    var nodelayer = svg.append("g").attr("class", "leaflet-zoom-hide");
+
+
+
+
+	var linklayer = svg.append("g").attr("class", "leaflet-zoom-hide").attr("marker-end", "url(#arrow)");
+	var nodelayer = svg.append("g").attr("class", "leaflet-zoom-hide");
 
 
 	// Load data asynchronosuly
@@ -78,10 +82,10 @@
 				if (hex_opened) return 0;
 
 
-					// Get link data for this node
-					var nodelinks = spatialsankey.links().filter(function(link){
-							return link.source == d.id;
-					});
+				// Get link data for this node
+				var nodelinks = spatialsankey.links().filter(function(link){
+					return link.source == d.id;
+				});
 
 
 				// Add data to link layer
@@ -98,6 +102,29 @@
 				}
 
 
+
+				function lineAnimate(selection) {
+					selection
+						.attr({
+							x2: function(d) {return d.x0},
+							y2: function(d) {return d.y0}
+						})
+						.style('opacity', 0)
+						.transition()
+						.ease('linear')
+						.duration(function(d) {return d.duration;})
+						.delay(function(d) {return d.delay;})
+						.attr({
+							x2: function(d) {return d.x1},
+							y2: function(d) {return d.y1}
+						})
+						.style('opacity', 0.8)
+						.transition()
+						.duration(1000)
+						.style('opacity', 0.1)
+						.each('end', function() {d3.select(this).call(lineAnimate)});
+				}
+
 				// flowinfo
 				$("#flowinfo").html("In 2013, the total population moved out from this region is <b>" +  d.properties.aggregate_outflows.toString() + "</b>, and the population moved in is <b>" +  d.properties.aggregate_inflows.toString() + "</b>.");
 
@@ -109,7 +136,8 @@
 					.style("fill", "none")
 					.style("display", linkfilter)
 					.attr('id', function(d){return d.id})
-					.style("stroke-width", function(d){ return Math.pow( parseFloat(d.flow), 1/3) / 5});
+					.style("stroke-width", function(d){ return Math.pow( parseFloat(d.flow), 1/3) / 5})
+					.call(lineAnimate);
 
 
 				beziers.exit().remove();
@@ -126,15 +154,15 @@
 					linklayer.selectAll("path").remove();
 					// Show all nodes
 					hexs.transition().style('opacity', 0.7);
-                    hex_opened = false;
+					hex_opened = false;
 				}
 
 			}
 
 			var click = function(d) {
 
-                hex_opened = true;
-                hex_clicked = true
+				hex_opened = true;
+				hex_clicked = true
 
 			}
 
@@ -161,15 +189,15 @@
 
 			var mapclick = function(e) {
 
-					if (hex_clicked){
-                        hex_clicked = false;
-					}else {
-                        linklayer.selectAll("path").remove();
-                        // Show all nodes
-                        hexs.transition().style('opacity', 0.7);
-                        hex_opened = false;
+				if (hex_clicked){
+					hex_clicked = false;
+				}else {
+					linklayer.selectAll("path").remove();
+					// Show all nodes
+					hexs.transition().style('opacity', 0.7);
+					hex_opened = false;
 
-                    }
+				}
 
 			}
 

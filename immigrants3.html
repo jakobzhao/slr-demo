@@ -1,0 +1,275 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>SLR and Immigration</title>
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+	<link rel="stylesheet" href="css/main.css" />
+
+	<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://d3js.org/d3.v3.min.js"></script>
+
+	<script src="js/spatialsankey-custom.js"></script>
+</head>
+<body>
+<div id="map"></div>
+<div class="info-panel">
+	<h4> Map Title </h4>
+	<p><b> Subtitle of the map </b></p><br/>
+
+	<p id="flowinfo"></p>
+
+	<!--place holder-->
+	<br/>
+	<p> A Project supported by <a href="http://geoviz.ceoas.oregonstate.edu" target="_blank"> <img src="img/logo.png" style="height:16px;margin-top:-4px"> The Cartography and Geovisualization Group</a> at Oregon State University</p>
+
+</div>
+<script type="text/javascript">
+
+	// Set leaflet map
+	var map = L.map("map").setView([40,-100], 5);
+
+	// construct the base map.
+	L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}@2x.png').addTo(map);
+
+	// Initialize the SVG layer
+	var svgLayer = L.svg().addTo(map);
+
+	// Setup svg element to work with
+	var svg = d3.select("#map").select("svg");
+
+
+
+
+	svg.append("svg:defs")
+		.append("svg:marker")
+		.attr("id", "arrow")
+		.attr("class", "path-arrow")
+		.attr("refX", 0)
+		.attr("refY", 1)
+		.attr("markerWidth", 4)
+		.attr("markerHeight", 4)
+		.attr("orient", "auto")
+		.append("svg:path")
+		.attr("d", "M0,0 L0,2 L3,1 z");
+
+
+	var linklayer = svg.append("g").attr("class", "leaflet-zoom-hide").attr("marker-end", "url(#arrow)");
+	var nodelayer = svg.append("g").attr("class", "leaflet-zoom-hide");
+
+
+	// Load data asynchronosuly
+	d3.json("assets/hex_select_4326.geojson", function(nodes) {
+		d3.csv("assets/hexagon_links.csv", function(links) {
+			// Setup spatialsankey object
+			var spatialsankey = d3.spatialsankey()
+				.lmap(map)
+				.nodes(nodes.features)
+				.links(links);
+			var hex_opened = false;
+			var hex_clicked = false;
+
+
+
+
+			var mouseover = function(d) {
+				if (hex_opened) return 0;
+
+
+				// Get link data for this node
+				var nodelinks = spatialsankey.links().filter(function(link){
+					return link.source == d.id;
+				});
+
+
+
+				// Add data to link layer
+				var beziers = linklayer.selectAll("path").data(nodelinks);
+				link = spatialsankey.link({'use_arcs': false, 'flip': false});
+
+				// filter
+				var linkfilter = function(d) {
+					if(parseFloat(d.flow) > 200) {
+						return "block"
+					} else {
+						return "none"
+					}
+				}
+
+
+				// flowinfo
+				$("#flowinfo").html("In 2013, the total population moved out from this region is <b>" +  d.properties.aggregate_outflows.toString() + "</b>, and the population moved in is <b>" +  d.properties.aggregate_inflows.toString() + "</b>.");
+
+				// Draw new links
+				beziers.enter()
+					.append("path")
+					.attr("d", link)
+					.attr("class", "curve")
+					.style("fill", "none")
+					.style("display", linkfilter)
+					.attr('id', function(d){return d.id})
+					.style("stroke-width", function(d){ return Math.pow( parseFloat(d.flow), 1/3) / 5});
+
+
+				beziers.exit().remove();
+
+
+				$.each(beziers[0], function (key, bezier) {
+
+					start_pnt_string = $(bezier).attr("d").replace("M", "").replace("C", " ").split(" ")[0];
+					start_pnt = [parseFloat(start_pnt_string.split(",")[0]), parseFloat(start_pnt_string.split(",")[1])];
+//                        var circle = svg.append("circle")
+//                            .attr("r", 1)
+//                            .attr("class", "m2")
+//                            .attr("transform", "translate(" + start_pnt + ")");
+
+
+
+					var circle = svg.append("svg:image")
+						.attr('x',0)
+						.attr('y',0)
+						.attr('width', 10)
+						.attr('height', 10)
+						.attr("orient", "auto")
+						.attr("xlink:href","https://www.greensock.com/_img/codepen/bezierCreature/creature_red.png")
+
+
+
+//						var width = 4;
+//						var height = 2;
+//						var circle =  svg.append('rect')
+//                            	.classed('filled', true)
+//                           		.attr("class", "moving-object")
+//								.attr('x', 0)
+//								.attr('y', 0)
+//								.attr('width', width)
+//								.attr('height', height)
+//								.attr("transform", "translate(" + start_pnt + ")");
+
+					transition();
+
+					function transition() {
+						circle.transition()
+							.duration((Math.random() * 10000) )
+							.attrTween("transform", translateAlong(bezier))
+							.each("end", transition);
+					}
+				});
+
+
+
+//                    for (var i=0; i< beziers.length; i++) {
+//                    start_pnt_string = $(beziers[0][i]).attr("d").replace("M", "").replace("C", " ").split(" ")[0];
+//                    start_pnt = [parseFloat(start_pnt_string.split(",")[0]), parseFloat(start_pnt_string.split(",")[1])];
+//                    var circle = svg.append("circle")
+//                        .attr("r", 2)
+//						.attr("class", "moving-object")
+//                        .attr("transform", "translate(" + start_pnt + ")");
+//
+//                    transition();
+//
+//                    function transition() {
+//                        circle.transition()
+//                            .duration(1000)
+//                            .attrTween("transform", translateAlong(beziers[0][i]))
+//                            .each("end", transition);
+//                    }
+//				}
+
+
+				// Returns an attrTween for translating along the specified path element.
+				function translateAlong(path) {
+					var l = path.getTotalLength();
+					return function(d, i, a) {
+						return function(t) {
+							var p = path.getPointAtLength(t * l);
+							return "translate(" + p.x + "," + p.y + ")";
+						};
+					};
+				}
+
+
+
+//				// Hide inactive nodes
+//				var circleUnderMouse = this;
+//				hexs.transition().style('opacity',function () {
+//					return (this === circleUnderMouse) ? 0.7 : 0;
+//				});
+
+			}
+
+
+//            mouseover({
+//				"id": -1,
+//				"flow": 1
+//			});
+
+			var mouseout = function(d) {
+
+				if (!hex_opened){
+					// Remove links
+					linklayer.selectAll("path").remove();
+					// Show all nodes
+					hexs.transition().style('opacity', 0.7);
+					hex_opened = false;
+				}
+
+			}
+
+			var click = function(d) {
+
+				hex_opened = true;
+				hex_clicked = true
+
+			}
+
+
+			// Draw nodes
+			var node = spatialsankey.node();
+			var hexs = nodelayer.selectAll("path")
+				.data(spatialsankey.nodes())
+				.enter()
+				.append("path")
+				.attr("d", node.geopath)
+				.style("fill", node.fill)
+				.style("display", node.display)
+				.attr("opacity", 0.7)
+				.on("mouseover", mouseover)
+				.on("mouseout", mouseout)
+				.on("click", click);
+
+
+			var zoomend = function() {
+				linklayer.selectAll("path").attr("d", spatialsankey.link());
+				hexs.attr("d", node.geopath);
+			};
+
+			var mapclick = function(e) {
+
+				if (hex_clicked){
+					hex_clicked = false;
+				}else {
+					linklayer.selectAll("path").remove();
+					// Show all nodes
+					hexs.transition().style('opacity', 0.7);
+					hex_opened = false;
+
+				}
+
+			}
+
+			map.on("zoomend", zoomend);
+			map.on("click", mapclick);
+
+
+		});
+	});
+
+
+
+</script>
+</body>
+</html>
